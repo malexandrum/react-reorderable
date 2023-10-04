@@ -1,0 +1,19 @@
+{
+  "name": "@apwize/react-reorderable",
+  "version": "1.0.0",
+  "description": "Wrapping your components in ReorderableItem allows user to drag them to reorder.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Molodoi <alex@apwize.com>",
+  "license": "ISC",
+  "types": "./index.d.ts",
+  "peerDependencies": {
+    "@types/node": "^16.18.23",
+    "@types/react": "^18.0.31",
+    "@types/react-dom": "^18.0.11",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

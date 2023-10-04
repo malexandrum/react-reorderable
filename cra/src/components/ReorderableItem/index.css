@@ -1,0 +1,11 @@
+.reorderable-item {
+    /* display: flex;
+    align-items: center; */
+    width: fit-content;
+}
+.reorderable-item div {
+    transition: all .15s ease-out;
+}
+.reorderable-item.disable-animation div {
+    transition: none;
+}

@@ -1,14 +1,17 @@
+import React from 'react'
 import { DragEvent, MouseEvent, useRef, useState } from 'react'
 import './index.css'
 
 let draggedElement: HTMLElement | undefined, draggedSize: number, draggedIdx: number
 
+// (window as any).ComponentReact = React
+
 type ReorderableItemProps = {
     acceptedTypes: string[],
     children: JSX.Element | JSX.Element[],
-    disableAnimation: boolean,
-    ghostOpacity: number,
-    handleClass: string,
+    disableAnimation?: boolean,
+    ghostOpacity?: number,
+    handleClass?: string,
     id: string,
     onDrop: (targetType: string, sourceType: string, targetId: string, sourceId: string, isBefore: boolean) => void,
     idx: number,
