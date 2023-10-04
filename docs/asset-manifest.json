@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/react-reorderable/static/css/main.591556db.css",
+    "main.js": "/react-reorderable/static/js/main.b6d0a1ee.js",
+    "static/js/787.51556ca9.chunk.js": "/react-reorderable/static/js/787.51556ca9.chunk.js",
+    "static/media/drag-handle.svg": "/react-reorderable/static/media/drag-handle.08eb3aba4a58c894e34e7d81f33c1f8c.svg",
+    "index.html": "/react-reorderable/index.html",
+    "main.591556db.css.map": "/react-reorderable/static/css/main.591556db.css.map",
+    "main.b6d0a1ee.js.map": "/react-reorderable/static/js/main.b6d0a1ee.js.map",
+    "787.51556ca9.chunk.js.map": "/react-reorderable/static/js/787.51556ca9.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.591556db.css",
+    "static/js/main.b6d0a1ee.js"
+  ]
+}

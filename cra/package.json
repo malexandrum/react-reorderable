@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prep": "rm -rf ../dist && tsc --project tsconfig-npm.json --outDir ../dist && copyfiles -u 2 ./src/components/**/*.css ../dist/ && cp package-npm.json ../dist/package.json"
+    "prep": "rm -rf ../dist && tsc --project tsconfig-npm.json --outDir ../dist && copyfiles -u 2 ./src/components/**/*.css ../dist/ && cp package-npm.json ../dist/package.json && cp README-npm.md ../dist/README.md"
   },
   "eslintConfig": {
     "extends": [
@@ -57,5 +57,6 @@
       "@babel/preset-react",
       "@babel/preset-typescript"
     ]
-  }
+  },
+  "homepage": "/react-reorderable"
 }
