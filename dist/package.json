@@ -1,6 +1,6 @@
 {
   "name": "@apwize/react-reorderable",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Wrapping your components in ReorderableItem allows user to drag them to reorder.",
   "main": "index.js",
   "scripts": {

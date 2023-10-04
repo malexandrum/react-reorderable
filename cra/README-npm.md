@@ -1,7 +1,7 @@
 # react-reorderable #
 Wrap your custom components to add drag to reorder capabilities
 
-![react-reorderable](https://github.com/malexandrum/react-reorderable/blob/main/cra/screenshot.jpg?raw=true)
+Demo: https://malexandrum.github.io/react-reorderable/
 
 ## Props
 - `acceptedTypes: string[]` - list of types that this item accepts to be dragged over
