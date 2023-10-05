@@ -1,52 +1,89 @@
-// import React from 'react';
-
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import './App.css';
 import ReorderableItem from './components/ReorderableItem';
-import handleImg from './drag-handle.svg';
+import CustomComponent from './CustomComponent'
+import Settings from './Settings';
+import { Settings as SettingsShape } from './context';
+import { SettingsCtx } from './context';
 
 function App() {
-  const [items, setItems] = useState(Array(4).fill(0).map((_, i) => i).map(x => ({ id: x.toString(), height: 15 + 0 * Math.random() })))
-  const [items2, setItems2] = useState(Array(10).fill(0).map((_, i) => i).map(x => ({ id: x.toString(), height: 15 + 0 * Math.random() })))
-  const [ghostOpacity, setGhostOpacity] = useState(true)
-  const [disableAnimation, setDisableAnimation] = useState(false)
+  const [items, setItems] = useState(Array(1000).fill(0).map((_, i) => i).map(x => ({ id: '1-' + x.toString(), height: 30 + 50 * Math.random() })))
+  const [items2, setItems2] = useState(Array(5).fill(0).map((_, i) => i).map(x => ({ id: '2-' + x.toString(), height: 30 + 50 * Math.random() })))
+  const [settings, setSettings] = useState<SettingsShape>({
+    ghostOpacity: false,
+    disableAnimation: false,
+    dragFromAnywhere: true
+  })
+  const [history, setHistory] = useState<string[]>([]);
+
+  const handleDrop = useCallback((targetType: string, sourceType: string, targetId: string, sourceId: string, isBefore: boolean | undefined) => {
+    setHistory(h => [...h, `{ Type: ${sourceType}, Id: ${sourceId} } moved ${isBefore ? 'before' : 'after'} { Type: ${targetType}, Id: ${targetId} }`])
+
+    if (sourceType === targetType) {
+      const setSrcTgtItems = sourceType === '1' ? setItems : setItems2
+      setSrcTgtItems(items => {
+        const newItems = [...items]
+        const targetIdx = items.findIndex(x => x.id === targetId)
+        const sourceIdx = items.findIndex(x => x.id === sourceId)
+        const source = items[sourceIdx]
+        newItems.splice(isBefore ? targetIdx : targetIdx + 1, 0, source);
+        const shouldShift = (targetIdx < sourceIdx) || ((targetIdx === sourceIdx) && isBefore)
+        newItems.splice(sourceIdx + (shouldShift ? 1 : 0), 1);
+        return newItems
+      })      
+    } else {
+          const setSrcItms = sourceType === '1' ? setItems : setItems2
+          const setTgtItems = targetType === '1' ? setItems : setItems2
+          setSrcItms(srcItems => {
+            const newSrcItems = [...srcItems]
+            const sourceIdx = srcItems.findIndex(x => x.id === sourceId)
+            const source = srcItems[sourceIdx]
+
+            newSrcItems.splice(sourceIdx, 1);
+
+            setTgtItems(items => { 
+              const newTgtItems = [...items];
+              const targetIdx = items.findIndex(x => x.id === targetId)
+              newTgtItems.splice(isBefore ? targetIdx : targetIdx + 1, 0, source); 
+              return newTgtItems; 
+            })
+
+            return newSrcItems
+          })          
+    }
+
+  }, [])
 
   return (
     <div style={{ padding: 10 }}>
-      <label>
-        <input type='checkbox' checked={ghostOpacity} onChange={() => setGhostOpacity(!ghostOpacity)} />
-        ghostOpacity
-      </label>
-      <br />
-      <label>
-        <input type='checkbox' checked={disableAnimation} onChange={() => setDisableAnimation(!disableAnimation)} />
-        disableAnimation
-      </label>
+      <h1>React Reorderable Demo</h1>
+
+      <SettingsCtx.Provider value={{ settings, setSettings }}>
+        <Settings />
+      </SettingsCtx.Provider>
+
       <div style={{ display: 'flex' }}>
         <div>
+          Count: {items?.length || 0}
           {items.map((x, idx) =>
-            <ReorderableItem id={x.id} type='type1' acceptedTypes={['type1']} key={x.id} idx={idx} handleClass='handle' disableAnimation={disableAnimation} ghostOpacity={ghostOpacity ? .2 : 0} onDrop={handleDrop}>
-              <div className='item' style={{ height: x.height }}>
-                {/* <div className='handle' style={{ padding: 10 }}>=</div> */}
-                <img src={handleImg} width={15} draggable={false} alt='handle' className='handle' />
-                <div>Type: 1, Id: {x.id}</div>
-                &nbsp;<button>Edit</button>
-              </div>
+            <ReorderableItem id={x?.id} type='1' acceptedTypes={['1']} key={x?.id} idx={idx} handleClass={settings?.dragFromAnywhere ? undefined : 'handle'} disableAnimation={settings?.disableAnimation} ghostOpacity={settings?.ghostOpacity ? .2 : 0} onDrop={handleDrop}>
+              <CustomComponent id={x?.id} type='1' height={x?.height} />
             </ReorderableItem>
           )}
         </div>
 
         <div>
+          Count: {items2?.length || 0}
           {items2.map((x, idx) =>
-            <ReorderableItem id={x.id} type='type2' acceptedTypes={['type1','type2']} key={x.id} idx={idx} handleClass='handle' disableAnimation={disableAnimation} ghostOpacity={ghostOpacity ? .2 : 0} onDrop={handleDrop}>
-              <div className='item' style={{ height: x.height }}>
-                {/* <div className='handle' style={{ padding: 10 }}>=</div> */}
-                <img src={handleImg} width={15} draggable={false} alt='handle' className='handle' style={{cursor: 'move'}} />
-                <div>Type: 2, Id: {x.id}</div>
-                &nbsp;<button>Edit</button>
-              </div>
+            <ReorderableItem id={x?.id} type='2' acceptedTypes={['1', '2']} key={x?.id} idx={idx} handleClass={settings?.dragFromAnywhere ? undefined : 'handle'} disableAnimation={settings?.disableAnimation} ghostOpacity={settings?.ghostOpacity ? .2 : 0} onDrop={handleDrop}>
+              <CustomComponent id={x?.id} type='2' height={x?.height} />
             </ReorderableItem>
           )}
+        </div>
+
+        <div style={{ marginLeft: 30, fontFamily: 'monospace' }}>
+          <h2>Reorder Log</h2>
+          {history.map((h, i) => <div key={i}>{h}</div>)}
         </div>
 
       </div>
@@ -54,32 +91,7 @@ function App() {
     </div>
   );
 
-  function handleDrop(targetType: string, sourceType: string, targetId: string, sourceId: string, isBefore: boolean | undefined) {
-    console.log('App level drop', arguments)
 
-    const itms = sourceType === 'type1' ? items : items2
-    const setItms = sourceType === 'type1' ? setItems : setItems2
-
-    const targetIdx = itms.findIndex(x => x.id === targetId)
-    const target = itms[targetIdx]
-    const sourceIdx = itms.findIndex(x => x.id === sourceId)
-    const source = itms[sourceIdx]
-
-    if (targetIdx < sourceIdx) {
-      if (isBefore) {
-        setItms([...itms.slice(0, targetIdx), source, target, ...itms.slice(targetIdx + 1, sourceIdx), ...itms.slice(sourceIdx + 1)]) // check boundary
-      } else {
-        setItms([...itms.slice(0, targetIdx), target, source, ...itms.slice(targetIdx + 1, sourceIdx), ...itms.slice(sourceIdx + 1)]) // check boundary
-      }
-    } else {
-      if (isBefore) {
-        setItms([...itms.slice(0, sourceIdx), ...itms.slice(sourceIdx + 1, targetIdx), source, target, ...itms.slice(targetIdx + 1)]) // check boundary
-      } else {
-        setItms([...itms.slice(0, sourceIdx), ...itms.slice(sourceIdx + 1, targetIdx), target, source, ...itms.slice(targetIdx + 1)]) // check boundary
-      }
-    }
-
-  }
 }
 
 export default App;

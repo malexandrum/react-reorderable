@@ -1,4 +1,3 @@
-import React from 'react'
 import { DragEvent, MouseEvent, useRef, useState } from 'react'
 import './index.css'
 
@@ -161,6 +160,5 @@ function ReorderableItem(
         }
     }
 }
-
 
 export default ReorderableItem
